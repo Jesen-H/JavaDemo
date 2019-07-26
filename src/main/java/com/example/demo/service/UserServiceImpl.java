@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.bean.Register;
 import com.example.demo.bean.Result;
 import com.example.demo.bean.User;
 import com.example.demo.dao.UserMapper;
@@ -15,14 +16,81 @@ public class UserServiceImpl implements UserService {
     UserMapper userMapper;
 
     @Override
+    public Result<Register> login(Register register) {
+        Result result = new Result<>();
+        String user = register.getUsername();
+        String psw = register.getPassword();
+        result.setResult("fail");
+        result.setCode(1);
+        if (isEmpty(user)) {
+            result.setMsg("账户名不能为空！");
+            return result;
+        } else if (isEmpty(psw)) {
+            result.setMsg("密码不能为空！");
+            return result;
+        }
+        Register login = userMapper.login(register.getUsername());
+        if (login == null){
+            result.setMsg("账户名不存在！");
+            return result;
+        }
+        if (isEmpty(login.getUsername())) {
+            result.setMsg("账户名不存在！");
+            return result;
+        } else if (!login.getPassword().equals(psw)) {
+            result.setMsg("密码错误");
+            return result;
+        }
+        result.setMsg("登录成功");
+        result.setCode(200);
+        result.setResult(login);
+        return result;
+    }
+
+    @Override
+    public Result<String> register(Register register) {
+        Result<String> result = new Result<>();
+        result.setCode(1);
+        result.setMsg("注册失败");
+        result.setResult("fail");
+        if (register == null) {
+            return result;
+        }
+        String user = register.getUsername();
+        String psw = register.getPassword();
+        if (isEmpty(user)) {
+            result.setMsg("账户名不能为空！");
+            return result;
+        } else if (isEmpty(psw)) {
+            result.setMsg("密码不能为空！");
+            return result;
+        }
+        Register login = userMapper.login(register.getUsername());
+        if (login != null){
+            if (login.getUsername().equals(register.getUsername())){
+                result.setMsg("该账号已存在");
+                return result;
+            }
+        }
+        int i = userMapper.register(register);
+        if (i != 1){
+            return result;
+        }
+        result.setMsg("注册成功");
+        result.setCode(200);
+        result.setResult("success");
+        return result;
+    }
+
+    @Override
     public Result<User> getInfo(int id) {
         Result result = new Result<>();
         User user = userMapper.getUser(id);
-        if (user != null){
+        if (user != null) {
             result.setCode(200);
             result.setMsg("success");
             result.setResult(user);
-        }else{
+        } else {
             result.setCode(1);
             result.setMsg("fail");
             result.setResult("");
@@ -34,7 +102,7 @@ public class UserServiceImpl implements UserService {
     public Result<List<User>> search(String keyword) {
         List<User> info = userMapper.search(keyword);
         Result result = new Result<>();
-        if (info == null || info.size() == 0){
+        if (info == null || info.size() == 0) {
             result.setCode(1);
             result.setMsg("fail");
             result.setResult("");
@@ -71,7 +139,7 @@ public class UserServiceImpl implements UserService {
     public Result<List<User>> selectUser() {
         List<User> select = userMapper.select();
         Result result = new Result<>();
-        if (select == null || select.size() == 0) {
+        if (select == null) {
             result.setCode(1);
             result.setMsg("fail");
             result.setResult("查询失败");
@@ -89,19 +157,19 @@ public class UserServiceImpl implements UserService {
         result.setCode(1);
         result.setMsg("删除失败");
         result.setResult("");
-        if (name == null || name.isEmpty()){
+        if (name == null || name.isEmpty()) {
             return result;
         }
         int delete = userMapper.delete(name);
-        if (delete != 1){
+        if (delete != 1) {
             return result;
         }
         List<User> select = userMapper.select();
-        if (select != null || select.size() != 0){
+        if (select != null || select.size() != 0) {
             result.setCode(200);
             result.setMsg("删除成功");
             result.setResult(select);
-        }else{
+        } else {
             result.setMsg("查询失败");
             result.setResult("");
         }
@@ -114,12 +182,16 @@ public class UserServiceImpl implements UserService {
         result.setCode(1);
         result.setMsg("更新失败");
         int update = userMapper.update(user);
-        if (update != 1){
+        if (update != 1) {
             result.setResult("");
             return result;
         }
         result.setMsg("更新成功");
         result.setCode(200);
         return result;
+    }
+
+    private boolean isEmpty(String str) {
+        return str == null || str.length() == 0;
     }
 }

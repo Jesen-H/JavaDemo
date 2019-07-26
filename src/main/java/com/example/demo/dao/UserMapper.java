@@ -1,5 +1,6 @@
 package com.example.demo.dao;
 
+import com.example.demo.bean.Register;
 import com.example.demo.bean.User;
 import org.apache.ibatis.annotations.*;
 
@@ -7,6 +8,17 @@ import java.util.List;
 
 @Mapper
 public interface UserMapper {
+
+    @Select("SELECT * FROM user_info WHERE username=#{username}")
+    public Register login(String username);
+
+    /**
+     * 插入数据
+     * @param register
+     * @return
+     */
+    @Insert("INSERT INTO user_info(username,password) VALUES(#{username},#{password})")
+    public int register(Register register);
 
     /**
      * 根据id查询用户信息

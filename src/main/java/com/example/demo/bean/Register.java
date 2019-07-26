@@ -1,6 +1,6 @@
 package com.example.demo.bean;
 
-public class Login {
+public class Register {
     private int id;
     private String username;
     private String password;

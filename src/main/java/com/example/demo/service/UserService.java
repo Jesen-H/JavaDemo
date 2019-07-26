@@ -1,11 +1,16 @@
 package com.example.demo.service;
 
+import com.example.demo.bean.Register;
 import com.example.demo.bean.Result;
 import com.example.demo.bean.User;
 
 import java.util.List;
 
 public interface UserService {
+
+    Result<Register> login(Register register);
+
+    Result<String> register(Register register);
 
     Result<User> getInfo(int id);
 
