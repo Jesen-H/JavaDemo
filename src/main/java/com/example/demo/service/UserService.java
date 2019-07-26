@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface UserService {
 
-    Result<User> getUser(int id);
+    Result<User> getInfo(int id);
 
     Result<List<User>> search(String keyword);
 

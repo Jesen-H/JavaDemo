@@ -15,7 +15,7 @@ public class UserServiceImpl implements UserService {
     UserMapper userMapper;
 
     @Override
-    public Result<User> getUser(int id) {
+    public Result<User> getInfo(int id) {
         Result result = new Result<>();
         User user = userMapper.getUser(id);
         if (user != null){

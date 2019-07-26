@@ -14,9 +14,14 @@ public class UserController {
     @Autowired
     UserService service;
 
+    @GetMapping("user_info")
+    public  Result<User> info(int id){
+        return service.getInfo(id);
+    }
+
     @GetMapping("search")
-    public Result<List<User>> getName(String keyword) {
-        return service.getName(keyword);
+    public Result<List<User>> search(String keyword) {
+        return service.search(keyword);
     }
 
     /**
@@ -56,6 +61,6 @@ public class UserController {
      */
     @PostMapping("/update")
     public Result<String> update(User user){
-        return service.insertUser(user);
+        return service.updateUser(user);
     }
 }
