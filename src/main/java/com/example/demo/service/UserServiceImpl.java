@@ -7,6 +7,7 @@ import com.example.demo.dao.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.util.List;
 
 @Service
@@ -30,7 +31,7 @@ public class UserServiceImpl implements UserService {
             return result;
         }
         Register login = userMapper.login(register.getUsername());
-        if (login == null){
+        if (login == null) {
             result.setMsg("账户名不存在！");
             return result;
         }
@@ -66,14 +67,14 @@ public class UserServiceImpl implements UserService {
             return result;
         }
         Register login = userMapper.login(register.getUsername());
-        if (login != null){
-            if (login.getUsername().equals(register.getUsername())){
+        if (login != null) {
+            if (login.getUsername().equals(register.getUsername())) {
                 result.setMsg("该账号已存在");
                 return result;
             }
         }
         int i = userMapper.register(register);
-        if (i != 1){
+        if (i != 1) {
             return result;
         }
         result.setMsg("注册成功");
@@ -120,11 +121,8 @@ public class UserServiceImpl implements UserService {
         result.setCode(1);
         result.setMsg("添加失败");
         result.setResult("");
-        if (user != null) {
-            if (user.getName() == null || user.getName().isEmpty()) {
-                result.setMsg("名称必填");
-                return result;
-            }
+        if (user == null) {
+            return result;
         }
         int add = userMapper.add(user);
         if (add == 1) {
@@ -177,17 +175,34 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Result<String> updateUser(User user) {
-        Result result = new Result<>();
+    public Result<User> updateUser(Integer id, User user) {
+        Result<User> result = new Result<>();
+        User info = userMapper.getUser(id);
         result.setCode(1);
         result.setMsg("更新失败");
-        int update = userMapper.update(user);
-        if (update != 1) {
-            result.setResult("");
+        result.setResult(info);
+        if (info == null) {
+            result.setMsg("没有该用户");
             return result;
         }
-        result.setMsg("更新成功");
+        if (id.toString().length() == 0) {
+            result.setMsg("id不能为空");
+            return result;
+        }
+        if (user == null) {
+            return result;
+        }
+        String name = isEmpty(user.getName()) ? "" : user.getName();
+        Date birthday = user.getBirthday();
+        String sex = isEmpty(user.getSex()) ? "男" : user.getSex();
+        int update = userMapper.update(id, name, user.getAge(), birthday, sex);
+        if (update != 1) {
+            return result;
+        }
+        info = userMapper.getUser(id);
         result.setCode(200);
+        result.setMsg("更新成功");
+        result.setResult(info);
         return result;
     }
 

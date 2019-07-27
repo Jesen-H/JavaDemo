@@ -22,6 +22,6 @@ public interface UserService {
 
     Result<String> deleteUser(String name);
 
-    Result<String> updateUser(User user);
+    Result<User> updateUser(Integer id, User user);
 
 }

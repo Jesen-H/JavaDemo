@@ -4,6 +4,7 @@ import com.example.demo.bean.Register;
 import com.example.demo.bean.User;
 import org.apache.ibatis.annotations.*;
 
+import java.sql.Date;
 import java.util.List;
 
 @Mapper
@@ -14,6 +15,7 @@ public interface UserMapper {
 
     /**
      * 插入数据
+     *
      * @param register
      * @return
      */
@@ -22,6 +24,7 @@ public interface UserMapper {
 
     /**
      * 根据id查询用户信息
+     *
      * @param id
      * @return
      */
@@ -30,6 +33,7 @@ public interface UserMapper {
 
     /**
      * 模糊查询
+     *
      * @param keyword
      * @return
      */
@@ -38,6 +42,7 @@ public interface UserMapper {
 
     /**
      * 插入数据
+     *
      * @param user
      * @return
      */
@@ -46,6 +51,7 @@ public interface UserMapper {
 
     /**
      * 删除数据
+     *
      * @param name
      * @return
      */
@@ -54,15 +60,16 @@ public interface UserMapper {
 
     /**
      * 更新数据
-     * @param user
+     *
      * @return
      */
     @Update("UPDATE user_info SET name=#{name},age=#{age},birthday=#{birthday},sex=#{sex} WHERE id=#{id}")
-    public int update(User user);
+    public int update(Integer id, String name, int age, Date birthday, String sex);
 
     /**
      * 查询数据
-      * @return
+     *
+     * @return
      */
     @Select("SELECT * FROM user_info")
     public List<User> select();

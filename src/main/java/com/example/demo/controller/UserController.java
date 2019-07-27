@@ -27,25 +27,28 @@ public class UserController {
 
     /**
      * 登录
+     *
      * @param register
      * @return
      */
     @PostMapping("/login")
     @ResponseBody
-    public Result<Register> login(Register register){
+    public Result<Register> login(Register register) {
         return service.login(register);
     }
 
     /**
      * 注册账户
+     *
      * @param register
      * @return
      */
     @PostMapping("/register")
     @ResponseBody
-    public Result<String> register(Register register){
+    public Result<String> register(Register register) {
         return service.register(register);
     }
+
     /**
      * 增
      *
@@ -86,7 +89,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/update")
-    public Result<String> update(User user) {
-        return service.updateUser(user);
+    public Result<User> update(int id, User user) {
+        return service.updateUser(id, user);
     }
 }
